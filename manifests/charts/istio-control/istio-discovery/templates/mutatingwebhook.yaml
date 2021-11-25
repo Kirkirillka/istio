@@ -140,5 +140,30 @@ webhooks:
       operator: DoesNotExist
 {{- end }}
 
+
+
+{{- if .Values.sidecarInjectorWebhook.alwaysInjectNamespaces }}
+{{- /* Special case 4: always inject in specified namespaces */}}
+{{- include "core" (mergeOverwrite (deepCopy .) (dict "Prefix" "auto.") ) }}
+  namespaceSelector:
+    matchExpressions:
+    - key: istio-injection
+      operator: DoesNotExist
+    - key: istio.io/rev
+      operator: DoesNotExist
+    - key: kubernetes.io/metadata.name
+      operator: In
+      values:
+        {{- range .Values.sidecarInjectorWebhook.alwaysInjectNamespaces }}
+        - {{ . | quote }}
+        {{- end }}
+  objectSelector:
+    matchExpressions:
+    - key: sidecar.istio.io/inject
+      operator: DoesNotExist
+    - key: istio.io/rev
+      operator: DoesNotExist
+{{- end }}
+
 {{- end }}
 {{- end }}
