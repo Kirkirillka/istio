@@ -144,7 +144,7 @@ webhooks:
 
 {{- if .Values.sidecarInjectorWebhook.alwaysInjectNamespaces }}
 {{- /* Special case 4: always inject in specified namespaces */}}
-{{- include "core" (mergeOverwrite (deepCopy .) (dict "Prefix" "auto.") ) }}
+{{- include "core" (mergeOverwrite (deepCopy .) (dict "Prefix" "auto-always-namespaces.") ) }}
   namespaceSelector:
     matchExpressions:
     - key: istio-injection
